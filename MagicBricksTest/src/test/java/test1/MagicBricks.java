@@ -14,11 +14,12 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class MagicBricks {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException
+	{
 		// To disable notification on chrome(Optional)
 		ChromeOptions opt = new ChromeOptions();
 		opt.addArguments("--disable-notifications");
-		WebDriver driver = new ChromeDriver();// passing opt as arguments(Optional)
+		WebDriver driver = new ChromeDriver();// Passing opt as arguments(Optional)
 
 		// Navigate to MagicBricks website
 		driver.get("https://www.magicbricks.com/");
