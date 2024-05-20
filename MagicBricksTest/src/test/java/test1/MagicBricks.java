@@ -14,45 +14,55 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class MagicBricks {
 
-	public static void main(String[] args) throws InterruptedException
-	{
+	public static void main(String[] args) throws InterruptedException {
 		// To disable notification on chrome(Optional)
 		ChromeOptions opt = new ChromeOptions();
 		opt.addArguments("--disable-notifications");
-		WebDriver driver = new ChromeDriver();// Passing opt as arguments(Optional)
+		WebDriver driver = new ChromeDriver();//(Optional) Passing opt as arguments
 
-		// Navigate to MagicBricks website
+		// Navigate to MagicBricks Website
 		driver.get("https://www.magicbricks.com/");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-
-		//driver.findElement(By.className("mb-search__tag-close")).click(); // optional if by default getting any city name
+		driver.findElement(By.className("mb-search__tag-close")).click();//(optional) if by default getting any city name
+																			
 		// Input location Mumbai and click submit
 		driver.findElement(By.className("mb-search__input")).sendKeys("Mumbai");
-		//driver.findElement(By.xpath("//div[@id=\"serachSuggest\"]/div[3]")).click();  // optional if by default getting any city
+		driver.findElement(By.xpath("//div[@id=\"serachSuggest\"]/div[3]")).click();//(optional) if by default getting any other city
 		driver.findElement(By.className("mb-search__btn")).click();
-		
-		//sorting in decending order
-		driver.findElement(By.className("mb-srp__tabs__sortby--title")).click();
-		driver.findElement(By.xpath("//ul[@class='mb-srp__tabs__sortby__dd__list']/li[text()='Price - High to Low']")).click();
-		Thread.sleep(1000);
-		List<WebElement> prices = driver.findElements(By.xpath("//div[@class='mb-srp__card__price--amount']"));
-		int count = 0;
 
-		// Print all price values in sorted order(descending)
-		for (WebElement price : prices) 
-		{
-			System.out.println(price.getText());
-			count++;
-			if (count == 5) {
-				price.click();// Click on the 5th element
-			}
-		}
+		// sorting in descending order by Website page
+		// At first I thought this is the requirement then after i realize requirement 
+//		driver.findElement(By.className("mb-srp__tabs__sortby--title")).click();
+//		driver.findElement(By.xpath("//ul[@class='mb-srp__tabs__sortby__dd__list']/li[text()='Price - High to Low']")).click();
+		List<WebElement> elements = driver.findElements(By.xpath("//div[@class='mb-srp__card__price--amount']"));
+		// Sorting in descending order before printing
+        TreeSet<WebElement> sortedSet = new TreeSet<>((e1, e2)->e2.getText().compareTo(e1.getText()));//initializes the TreeSet with a custom comparator defined by a lambda expression 
+		sortedSet.addAll(elements);
+		int count = 0;
+		// Print the sorted elements in descending
+		for (WebElement element : sortedSet) {
+			String prices = element.getText();
+			if (prices.contains("Lac")) {
+				continue;
+			} else {
+				System.out.println(prices);
+				count++;
+				if (count == 5) {
+					element.click();
+			}	}}
+		for (WebElement element : sortedSet) {
+			String prices = element.getText();
+			if (prices.contains("Cr")) {
+				continue;
+			} else {
+				System.out.println(prices);
+			}}
+		//Switching focus to child window
 		Set<String> s = driver.getWindowHandles();
 		Iterator<String> I1 = s.iterator();
 		String parent_window = I1.next();
 		String child_window = I1.next();
-		Thread.sleep(1000);
 		driver.switchTo().window(child_window);
 		driver.findElement(By.xpath("//button[@class='contact-form__btn freecab']")).click();
 		driver.findElement(By.id("userName")).sendKeys("Nilesh");
@@ -62,9 +72,6 @@ public class MagicBricks {
 		// Fill the form and submited
 		driver.quit();
 		// Close the browser
-			}
-		
-
-	
+	}
 
 }
